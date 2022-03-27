@@ -84,7 +84,7 @@ dumpelasticsearch() {
     curl -XPUT "$URL/_snapshot/$REPO/$SNAPSHOT?wait_for_completion=true" | jq '.'
 }
 # DUMP BACKUP
-dumpposgres() {
+dumppostgres() {
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD="$PASSWORD"

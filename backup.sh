@@ -4,7 +4,7 @@ err() {
 }
 
 usage() {
-    err "$(basename $0): [init|zip|upload|download|dump|dump<db_type><install>]|dump<db_type>"
+    err "$(basename $0): [init|zip|upload|dump|dump<db_type><install>]|dump<db_type>"
 }
 
 init() {
@@ -34,9 +34,6 @@ drive-logout() {
     rm -rf ~/.gdrive
 }
 
-download() {
-    echo "Download something"
-}
 
 dumphelp() {
     echo '🐳🐳🐳 INSTRUCTIONS TO DUMP DATABASE FAMILY 🐳🐳🐳'

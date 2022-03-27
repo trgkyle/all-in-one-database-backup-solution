@@ -37,21 +37,39 @@ drive-logout() {
 
 dumphelp() {
     echo '🐳🐳🐳 INSTRUCTIONS TO DUMP DATABASE FAMILY 🐳🐳🐳'
-    echo  '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     echo 'Mongo:'
     echo '              export SERVER=localhost:27017'
     echo '              export DATABASE=<db>'
-    echo  '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    echo ''
     echo 'Postgres:'
     echo '              export HOSTNAME=localhost'
     echo '              export USERNAME=postgres'
     echo '              export PASSWORD='
     echo '              export DATABASE=postgres'
-    echo  '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    echo ''
     echo 'Elasticsearch:'
     echo '              export HOSTNAME=http://localhost:9200'
     echo '              export BACKUP_INDEX=my-index'
-    echo  '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    echo ''
+    echo 'MINIO:'
+    echo '              export BUCKET_NAME=my-bucket'
+    echo '----------------------------------------'
+    echo '🛠🛠🛠 INSTRUCTIONS TO LOAD DUMP DATABASE FAMILY 🛠🛠🛠'
+    echo ''
+    echo 'Mongo:'
+    echo '              export SERVER=localhost:27017'
+    echo '              export DATABASE=<db>'
+    echo '              export FILENAME=<file>'
+    echo ''
+    echo 'Postgres:'
+    echo '              export HOSTNAME=localhost'
+    echo '              export USERNAME=postgres'
+    echo '              export PASSWORD='
+    echo '              export DATABASE=postgres'
+    echo ''
+    echo 'Elasticsearch:'
+    echo '              export HOSTNAME=http://localhost:9200'
+    echo '              export BACKUP_INDEX=my-index'
     echo 'MINIO:'
     echo '              export BUCKET_NAME=my-bucket'
 }
@@ -106,6 +124,9 @@ dumpminio() {
 }
 
 # LOAD DUMP
+loaddumpmongo() {
+    mongorestore --host $SERVER --db $DATABASE --verbose $FILENAME
+}
 loaddumpelasticsearch() {
     base_dir="$(dirname "$0")"
     URL=$HOSTNAME

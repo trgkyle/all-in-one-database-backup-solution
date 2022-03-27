@@ -30,6 +30,10 @@ drive() {
     ./gdrive
 }
 
+drive-logout() {
+    rm -rf ~/.gdrive
+}
+
 download() {
     echo "Download something"
 }
@@ -42,7 +46,7 @@ dumphelp() {
     echo '              export DATABASE=<db>'
     echo  '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     echo 'Postgres:'
-    echo '              export HOSTNAME=localhost:5432'
+    echo '              export HOSTNAME=localhost'
     echo '              export USERNAME=postgres'
     echo '              export PASSWORD='
     echo '              export DATABASE=postgres'
@@ -87,7 +91,7 @@ dumpelasticsearch() {
 dumppostgres() {
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
-    export PGPASSWORD="$PASSWORD"
+    export PGPASSWORD=$PASSWORD
     pg_dump -F t -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME
     unset PGPASSWORD
     gzip $FILENAME
@@ -172,6 +176,9 @@ execute() {
             ;;
         drive)
             drive
+            ;;
+        drive-logout)
+            drive-logout
             ;;
         all)
             init

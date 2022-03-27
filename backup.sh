@@ -125,7 +125,7 @@ dumpminio() {
 
 # LOAD DUMP
 loaddumpmongo() {
-    mongorestore --host $SERVER --db $DATABASE --verbose $FILENAME
+    mongorestore --gzip --host $SERVER --archive=$FILENAME --db $DATABASE --drop
 }
 loaddumpelasticsearch() {
     base_dir="$(dirname "$0")"
@@ -171,11 +171,17 @@ execute() {
         dumpmongo)
             dumpmongo
             ;;
+        loaddumpmongo)
+            loaddumpmongo
+            ;;
         dumppostgresinstall)
             dumppostgresinstall
             ;;
         dumppostgres)
             dumppostgres
+            ;;
+        loaddumppostgres)
+            loaddumppostgres
             ;;
         dumpelasticsearchinstall)
             dumpelasticsearchinstall

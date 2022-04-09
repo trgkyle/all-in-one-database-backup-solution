@@ -126,6 +126,15 @@ dumpminio() {
 
 # LOAD DUMP
 loaddumppostgres() {
+    # Print config
+    echo "LOAD CONFIG:"
+    echo "HOSTNAME: $HOSTNAME"
+    echo "USERNAME: $USERNAME"
+    echo "PASSWORD: $PASSWORD"
+    echo "DATABASE: $DATABASE"
+    echo "FILENAME_GZIP: $FILENAME_GZIP"
+    echo "----------------------------------------"
+    # Load dump
     gunzip $FILENAME_GZIP
     export FILENAME=$(basename $FILENAME_GZIP .gz)
     echo "Pulling Database: This may take a few minutes"

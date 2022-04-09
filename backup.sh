@@ -138,6 +138,7 @@ loaddumppostgres() {
     # Load dump
     gunzip $FILENAME_GZIP
     export FILENAME=$(basename $FILENAME_GZIP .gz)
+    echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
     pg_restore -d $DATABASE $FILENAME -c -U $USERNAME

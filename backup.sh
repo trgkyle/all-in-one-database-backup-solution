@@ -66,6 +66,7 @@ dumphelp() {
     echo '              export USERNAME=postgres'
     echo '              export PASSWORD='
     echo '              export DATABASE=postgres'
+    echo '              export FILENAME_GZIP=<file>'
     echo ''
     echo 'Elasticsearch:'
     echo '              export HOSTNAME=http://localhost:9200'
@@ -124,6 +125,14 @@ dumpminio() {
 }
 
 # LOAD DUMP
+loaddumppostgres() {
+    gunzip $FILENAME_GZIP
+    export $FILENAME=$(basename $FILENAME_GZIP .gz)
+    echo "Pulling Database: This may take a few minutes"
+    export PGPASSWORD=$PASSWORD
+    pg_restore -d $DATABASE $FILENAME -c -U $USERNAME
+    unset PGPASSWORD
+}
 loaddumpmongo() {
     mongorestore --gzip --host $SERVER --archive=$FILENAME --db $DATABASE --drop
 }

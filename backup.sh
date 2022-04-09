@@ -141,7 +141,7 @@ loaddumppostgres() {
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_restore -d $DATABASE $FILENAME -c -U $USERNAME
+    pg_restore -h $HOSTNAME -d $DATABASE $FILENAME -c -U $USERNAME -W $PASSWORD
     unset PGPASSWORD
 }
 loaddumpmongo() {

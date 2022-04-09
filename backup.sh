@@ -30,9 +30,9 @@ drive() {
     ./gdrive
 }
 
-drive-logout() {
-    rm -rf ~/.gdrive
-}
+# drive-logout() {
+#     rm -rf ~/.gdrive
+# }
 
 
 dumphelp() {
@@ -107,7 +107,7 @@ dumppostgres() {
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_dump -F t -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME
+    pg_dump -F t -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME --disable-triggers --data-only
     unset PGPASSWORD
     gzip $FILENAME
 }

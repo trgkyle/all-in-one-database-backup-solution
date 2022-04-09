@@ -127,6 +127,7 @@ dumpminio() {
 # LOAD DUMP
 loaddumppostgres() {
     # Print config
+    echo "----------------------------------------"
     echo "LOAD CONFIG:"
     echo "HOSTNAME: $HOSTNAME"
     echo "USERNAME: $USERNAME"

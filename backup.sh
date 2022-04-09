@@ -108,7 +108,7 @@ dumppostgres() {
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_dump --disable-triggers --data-only -F t -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME
+    pg_dump -F t -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME
     unset PGPASSWORD
     gzip $FILENAME
 }
@@ -141,7 +141,7 @@ loaddumppostgres() {
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_restore -C -h $HOSTNAME -d $DATABASE $FILENAME -c -U $USERNAME
+    pg_restore -C -h $HOSTNAME -d $DATABASE $FILENAME -c -U $USERNAME --disable-triggers --data-only
     unset PGPASSWORD
 }
 loaddumpmongo() {

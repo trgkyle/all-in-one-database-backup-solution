@@ -127,7 +127,7 @@ dumpminio() {
 # LOAD DUMP
 loaddumppostgres() {
     gunzip $FILENAME_GZIP
-    export $FILENAME=$(basename $FILENAME_GZIP .gz)
+    export FILENAME=$(basename $FILENAME_GZIP .gz)
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
     pg_restore -d $DATABASE $FILENAME -c -U $USERNAME

@@ -113,7 +113,7 @@ dumppostgres() {
     echo 'ALL CHECK BACKUP PARAMS:'
     echo "export HOSTNAME=$HOSTNAME"
     echo "export USERNAME=$USERNAME"
-    echo "export PGPASSWORD=$PASSWORD"
+    echo "export PASSWORD=$PASSWORD"
     echo "export DATABASE=$DATABASE"
     echo '=========================================================='
 
@@ -127,7 +127,7 @@ dumppostgres() {
     echo 'LOAD DUMP DATABASE WITH COMMAND:'
     echo "export HOSTNAME=$HOSTNAME"
     echo "export USERNAME=$USERNAME"
-    echo "export PGPASSWORD=$PASSWORD"
+    echo "export PASSWORD=$PASSWORD"
     echo "export DATABASE=$DATABASE"
     echo "export FILENAME_GZIP=$FILENAME.gz"
     echo '=========================================================='

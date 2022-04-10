@@ -113,11 +113,11 @@ dumppostgres() {
     gzip $FILENAME
     echo '=========================================================='
     echo 'LOAD DUMP DATABASE WITH COMMAND:'
-    echo 'export HOSTNAME=$HOSTNAME'
-    echo 'export USERNAME=$USERNAME'
-    echo 'export PGPASSWORD=$PASSWORD'
-    echo 'export DATABASE=$DATABASE'
-    echo 'export FILENAME_GZIP=$FILENAME_GZIP'
+    echo "export HOSTNAME=$HOSTNAME"
+    echo "export USERNAME=$USERNAME"
+    echo "export PGPASSWORD=$PASSWORD"
+    echo "export DATABASE=$DATABASE"
+    echo "export FILENAME_GZIP=$FILENAME_GZIP"
     echo '=========================================================='
 
 }
@@ -138,11 +138,11 @@ loaddumppostgres() {
     # Print config
     echo "----------------------------------------"
     echo "LOAD CONFIG:"
-    echo "HOSTNAME: $($HOSTNAME)"
-    echo "USERNAME: $($USERNAME)"
-    echo "PASSWORD: $($PASSWORD)"
-    echo "DATABASE: $($DATABASE)"
-    echo "FILENAME_GZIP: $($FILENAME_GZIP)"
+    echo "HOSTNAME: $HOSTNAME"
+    echo "USERNAME: $USERNAME"
+    echo "PASSWORD: $PASSWORD"
+    echo "DATABASE: $DATABASE"
+    echo "FILENAME_GZIP: $FILENAME_GZIP"
     echo "----------------------------------------"
     # Load dump
     gunzip $FILENAME_GZIP

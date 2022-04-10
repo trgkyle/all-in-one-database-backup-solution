@@ -138,11 +138,11 @@ loaddumppostgres() {
     # Print config
     echo "----------------------------------------"
     echo "LOAD CONFIG:"
-    echo "HOSTNAME: $HOSTNAME"
-    echo "USERNAME: $USERNAME"
-    echo "PASSWORD: $PASSWORD"
-    echo "DATABASE: $DATABASE"
-    echo "FILENAME_GZIP: $FILENAME_GZIP"
+    echo "HOSTNAME: $($HOSTNAME)"
+    echo "USERNAME: $($USERNAME)"
+    echo "PASSWORD: $($PASSWORD)"
+    echo "DATABASE: $($DATABASE)"
+    echo "FILENAME_GZIP: $($FILENAME_GZIP)"
     echo "----------------------------------------"
     # Load dump
     gunzip $FILENAME_GZIP

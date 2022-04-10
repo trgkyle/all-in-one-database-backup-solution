@@ -120,7 +120,7 @@ dumppostgres() {
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_dump -a -Fc -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME --column-inserts --data-only
+    pg_dump -a -Fc -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME --column-inserts
     unset PGPASSWORD
     gzip $FILENAME
     echo '=========================================================='

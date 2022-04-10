@@ -117,7 +117,7 @@ dumppostgres() {
     echo "export USERNAME=$USERNAME"
     echo "export PGPASSWORD=$PASSWORD"
     echo "export DATABASE=$DATABASE"
-    echo "export FILENAME_GZIP=$FILENAME_GZIP"
+    echo "export FILENAME_GZIP=$FILENAME.gz"
     echo '=========================================================='
 
 }

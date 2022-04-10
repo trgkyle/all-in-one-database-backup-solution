@@ -82,7 +82,8 @@ dumppostgresinstall() {
     sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
     apt-get update
-    apt install postgresql-client
+    apt install postgresql-client-13
+    apt install postgresql-client-14
 }
 dumpelasticsearchinstall() {
     apt install jq

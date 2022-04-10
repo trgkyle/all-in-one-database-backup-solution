@@ -1,0 +1,48 @@
+version: "3"
+services:
+  odfe-node1:
+    restart: always
+    image: amazon/opendistro-for-elasticsearch:1.13.2
+    environment:
+      - cluster.name=odfe-cluster
+      - node.name=odfe-node1
+      - discovery.seed_hosts=odfe-node1
+      - cluster.initial_master_nodes=odfe-node1
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - knn.cache.item.expiry.enabled=true
+      - knn.cache.item.expiry.minutes=2h
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144 # maximum number of open files for the Elasticsearch user, set to at least 65536 on modern systems
+        hard: 262144
+    volumes:
+      - ./odfe-data1:/usr/share/elasticsearch/data
+    ports:
+      - "9201:9200"
+  odfe-node2:
+    restart: always
+    image: amazon/opendistro-for-elasticsearch:1.13.2
+    environment:
+      - cluster.name=odfe-cluster
+      - node.name=odfe-node1
+      - discovery.seed_hosts=odfe-node1
+      - cluster.initial_master_nodes=odfe-node1
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - knn.cache.item.expiry.enabled=true
+      - knn.cache.item.expiry.minutes=2h
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144 # maximum number of open files for the Elasticsearch user, set to at least 65536 on modern systems
+        hard: 262144
+    volumes:
+      - ./odfe-data2:/usr/share/elasticsearch/data
+    ports:
+      - "9201:9200"

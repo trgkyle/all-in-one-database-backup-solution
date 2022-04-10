@@ -109,6 +109,14 @@ dumpelasticsearch() {
 }
 # DUMP BACKUP
 dumppostgres() {
+    echo '=========================================================='
+    echo 'ALL CHECK BACKUP PARAMS:'
+    echo "export HOSTNAME=$HOSTNAME"
+    echo "export USERNAME=$USERNAME"
+    echo "export PGPASSWORD=$PASSWORD"
+    echo "export DATABASE=$DATABASE"
+    echo '=========================================================='
+
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD

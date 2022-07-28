@@ -80,10 +80,14 @@ dump_mongo_install() {
 }
 dump_postgres_install() {
     read -p "Enter postgres version (eg: 12): " version
-    sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-    apt-get update
-    apt install postgresql-client-$version
+    if [ "$(uname)" == "Darwin" ]; then
+        HOMEBREW_NO_AUTO_UPDATE=1 brew install libpq
+    elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+        sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+        apt-get update
+        apt install postgresql-client-$version
+    fi
 }
 dump_elasticsearch_install() {
     apt install jq
@@ -123,16 +127,25 @@ dump_postgres() {
     export PGPASSWORD=$PASSWORD
     pg_dump -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME > $FILENAME
     unset PGPASSWORD
+
+}
+
+gzipFile() {
     gzip $FILENAME
+}
+
+ungzipFile() {
+    gunzip $FILENAME
+}
+recommend_postgres_dump() {
     echo '=========================================================='
     echo 'LOAD DUMP DATABASE WITH COMMAND:'
     echo "export HOSTNAME=$HOSTNAME"
     echo "export USERNAME=$USERNAME"
     echo "export PASSWORD=$PASSWORD"
     echo "export DATABASE=$DATABASE"
-    echo "export FILENAME_GZIP=$FILENAME.gz"
+    echo "export FILENAME=$FILENAME"
     echo '=========================================================='
-
 }
 
 dump_mongo() {
@@ -156,11 +169,9 @@ load_dump_postgres() {
     echo "PASSWORD: $PASSWORD"
     echo "DATABASE: $DATABASE"
     echo "PORT: $PORT"
-    echo "FILENAME_GZIP: $FILENAME_GZIP"
+    echo "FILENAME: $FILENAME"
     echo "----------------------------------------"
     # Load dump
-    gunzip $FILENAME_GZIP
-    export FILENAME=$(basename $FILENAME_GZIP .gz)
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
@@ -222,6 +233,8 @@ execute() {
             ;;
         dump_postgres)
             dump_postgres
+            gzipFile
+            recommend_postgres_dump
             ;;
         load_dump_postgres)
             load_dump_postgres

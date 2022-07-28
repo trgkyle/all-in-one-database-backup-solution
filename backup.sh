@@ -162,7 +162,7 @@ loaddumppostgres() {
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_restore -c --verbose --clean --no-acl --no-owner -h $HOSTNAME -d $DATABASE $FILENAME -U $USERNAME
+    psql -h $HOSTNAME -d $DATABASE $FILENAME -U $USERNAME --disable-triggers
     unset PGPASSWORD
 }
 loaddumpmongo() {

@@ -4,7 +4,7 @@ err() {
 }
 
 usage() {
-    err "$(basename $0): [init|zip|upload|dump|dump<db_type><install>]|dump<db_type>"
+    err "$(basename $0): [init|zip|upload|dump|dump_<db_type>_install]|dump_<db_type>"
 }
 
 init() {
@@ -75,20 +75,20 @@ dumphelp() {
     echo '              export BUCKET_NAME=my-bucket'
 }
 # DUMP INSTALL
-dumpmongoinstall() {
+dump_mongo_install() {
     apt install mongo-tools
 }
-dumppostgresinstall() {
+dump_postgres_install() {
+    read -p "Enter postgres version (eg: 12): " version
     sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
     apt-get update
-    apt install postgresql-client-13
-    apt install postgresql-client-14
+    apt install postgresql-client-$version
 }
-dumpelasticsearchinstall() {
+dump_elasticsearch_install() {
     apt install jq
 }
-dumpelasticsearch() {
+dump_elastic_search() {
     base_dir="$(dirname "$0")"
 
     URL=$HOSTNAME
@@ -108,7 +108,7 @@ dumpelasticsearch() {
     curl -XPUT "$URL/_snapshot/$REPO/$SNAPSHOT?wait_for_completion=true" | jq '.'
 }
 # DUMP BACKUP
-dumppostgres() {
+dump_postgres() {
     echo '=========================================================='
     echo 'ALL CHECK BACKUP PARAMS:'
     echo "export HOSTNAME=$HOSTNAME"
@@ -135,19 +135,19 @@ dumppostgres() {
 
 }
 
-dumpmongo() {
+dump_mongo() {
     FILENAME=mongo_backup_`date +%m%d%y%H`.zip
     DEST=./$FILENAME
     mongodump -h $SERVER -d $DATABASE --archive=$DEST --gzip
 }
-dumpminio() {
+dump_minio() {
     FOLDERNAME=minio_backup_$(date +%Y-%m-%d)
     mkdir -p $FOLDERNAME
     mc mirror -w $FOLDERNAME play/$BUCKET_NAME
 }
 
 # LOAD DUMP
-loaddumppostgres() {
+load_dump_postgres() {
     # Print config
     echo "----------------------------------------"
     echo "LOAD CONFIG:"
@@ -167,10 +167,10 @@ loaddumppostgres() {
     psql -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME < $FILENAME
     unset PGPASSWORD
 }
-loaddumpmongo() {
+load_dump_mongo() {
     mongorestore --gzip --host $SERVER --archive=$FILENAME --db $DATABASE --drop
 }
-loaddumpelasticsearch() {
+load_dump_elasticsearch() {
     base_dir="$(dirname "$0")"
     URL=$HOSTNAME
     REPO=$BACKUP_INDEX
@@ -208,29 +208,29 @@ loaddumpelasticsearch() {
 execute() {
     local task=${1}
     case ${task} in
-        dumpmongoinstall)
+        dump_mongo_install)
             dumpmongoinstall
             ;;
-        dumpmongo)
-            dumpmongo
+        dump_mongo)
+            dump_mongo
             ;;
-        loaddumpmongo)
-            loaddumpmongo
+        load_dump_mongo)
+            load_dump_mongo
             ;;
-        dumppostgresinstall)
-            dumppostgresinstall
+        dump_postgres_install)
+            dump_postgres_install
             ;;
-        dumppostgres)
-            dumppostgres
+        dump_postgres)
+            dump_postgres
             ;;
-        loaddumppostgres)
-            loaddumppostgres
+        load_dump_postgres)
+            load_dump_postgres
             ;;
-        dumpelasticsearchinstall)
-            dumpelasticsearchinstall
+        dump_elasticsearch_install)
+            dump_elasticsearch_install
             ;;
-        dumpelasticsearch)
-            dumpelasticsearch
+        dump_elasticsearch)
+            dumpe_lasticsearch
             ;;
         dump)
             dumphelp

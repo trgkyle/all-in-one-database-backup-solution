@@ -115,12 +115,13 @@ dumppostgres() {
     echo "export USERNAME=$USERNAME"
     echo "export PASSWORD=$PASSWORD"
     echo "export DATABASE=$DATABASE"
+    echo "export PORT=$PORT"
     echo '=========================================================='
 
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    pg_dump -a -Fc -h $HOSTNAME -U $USERNAME $DATABASE > $FILENAME
+    pg_dump -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME > $FILENAME
     unset PGPASSWORD
     gzip $FILENAME
     echo '=========================================================='
@@ -154,6 +155,7 @@ loaddumppostgres() {
     echo "USERNAME: $USERNAME"
     echo "PASSWORD: $PASSWORD"
     echo "DATABASE: $DATABASE"
+    echo "PORT: $PORT"
     echo "FILENAME_GZIP: $FILENAME_GZIP"
     echo "----------------------------------------"
     # Load dump
@@ -162,7 +164,7 @@ loaddumppostgres() {
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    psql -h $HOSTNAME -d $DATABASE $FILENAME -U $USERNAME --disable-triggers < $FILENAME
+    psql -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME < $FILENAME
     unset PGPASSWORD
 }
 loaddumpmongo() {

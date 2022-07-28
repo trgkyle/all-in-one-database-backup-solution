@@ -92,7 +92,7 @@ dump_postgres_install() {
 dump_elasticsearch_install() {
     apt install jq
 }
-dump_elastic_search() {
+dump_elasticsearch() {
     base_dir="$(dirname "$0")"
 
     URL=$HOSTNAME
@@ -122,6 +122,12 @@ dump_postgres() {
     echo "export PORT=$PORT"
     echo '=========================================================='
 
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
+
+
     FILENAME=postgres_dump_$(date +%Y-%m-%d).backup
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
@@ -137,25 +143,25 @@ gzipFile() {
 ungzipFile() {
     gunzip $FILENAME
 }
-recommend_postgres_dump() {
-    echo '=========================================================='
-    echo 'LOAD DUMP DATABASE WITH COMMAND:'
-    echo "export HOSTNAME=$HOSTNAME"
-    echo "export USERNAME=$USERNAME"
-    echo "export PASSWORD=$PASSWORD"
-    echo "export DATABASE=$DATABASE"
-    echo "export FILENAME=$FILENAME"
-    echo '=========================================================='
-}
 
 dump_mongo() {
     FILENAME=mongo_backup_`date +%m%d%y%H`.zip
     DEST=./$FILENAME
+
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
     mongodump -h $SERVER -d $DATABASE --archive=$DEST --gzip
 }
 dump_minio() {
     FOLDERNAME=minio_backup_$(date +%Y-%m-%d)
     mkdir -p $FOLDERNAME
+
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
     mc mirror -w $FOLDERNAME play/$BUCKET_NAME
 }
 
@@ -172,13 +178,22 @@ load_dump_postgres() {
     echo "FILENAME: $FILENAME"
     echo "----------------------------------------"
     # Load dump
-    echo "File name: $FILENAME"
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
+
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
     psql -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME < $FILENAME
     unset PGPASSWORD
 }
 load_dump_mongo() {
+
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
     mongorestore --gzip --host $SERVER --archive=$FILENAME --db $DATABASE --drop
 }
 load_dump_elasticsearch() {
@@ -198,6 +213,11 @@ load_dump_elasticsearch() {
     # 23/2/2014 karel@narfum.eu
 
     # Get a list of snapshots that we want to delete
+
+    read -p "Continue (y/n)?"
+    if [ "$REPLY" != "y" ]; then
+    exit
+    fi
     echo "curl -s -XGET \"$URL/_snapshot/$REPO/_all\" | jq -r \".snapshots[:-${LIMIT}][].snapshot\""
     SNAPSHOTS=`curl -s -XGET "$URL/_snapshot/$REPO/_all" | jq -r ".snapshots[:-${LIMIT}][].snapshot"`
 
@@ -220,10 +240,11 @@ execute() {
     local task=${1}
     case ${task} in
         dump_mongo_install)
-            dumpmongoinstall
+            dumpmongo_install
             ;;
         dump_mongo)
             dump_mongo
+            gzipFile
             ;;
         load_dump_mongo)
             load_dump_mongo
@@ -231,10 +252,12 @@ execute() {
         dump_postgres_install)
             dump_postgres_install
             ;;
+        dump_postgres_local)
+            dump_postgres
+            ;;
         dump_postgres)
             dump_postgres
             gzipFile
-            recommend_postgres_dump
             ;;
         load_dump_postgres)
             load_dump_postgres
@@ -243,7 +266,8 @@ execute() {
             dump_elasticsearch_install
             ;;
         dump_elasticsearch)
-            dumpe_lasticsearch
+            dump_elasticsearch
+            gzipFile
             ;;
         dump)
             dumphelp

@@ -162,7 +162,7 @@ loaddumppostgres() {
     echo "File name: $FILENAME"
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    psql -h $HOSTNAME -d $DATABASE $FILENAME -U $USERNAME --disable-triggers
+    psql -h $HOSTNAME -d $DATABASE $FILENAME -U $USERNAME --disable-triggers < $FILENAME
     unset PGPASSWORD
 }
 loaddumpmongo() {

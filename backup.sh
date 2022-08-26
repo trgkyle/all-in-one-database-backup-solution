@@ -185,7 +185,7 @@ load_dump_postgres() {
 
     echo "Pulling Database: This may take a few minutes"
     export PGPASSWORD=$PASSWORD
-    psql -d $DATABASE -h $HOSTNAME -p $PORT -u $USERNAME < $FILENAME
+    psql -d $DATABASE -h $HOSTNAME -p $PORT -U $USERNAME < $FILENAME
     unset PGPASSWORD
 }
 load_dump_mongo() {
